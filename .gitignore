@@ -1,0 +1,17 @@
+# Fichiers sensibles
+.env
+
+# Dépendances Node.js
+node_modules/
+
+# Répertoires spécifiques
+uploads/
+logs/
+__pycache__/
+
+# Fichiers de configuration IDE
+.vscode/
+.idea/
+
+# Outils externes
+vcpkg/

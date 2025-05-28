@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connexion Client</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 100vh;
+      padding: 0 5%;
+    }
+
+    .login-container {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 216, 255, 0.5);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      color: #00d8ff;
+      font-size: 2rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: left;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      margin-top: 5px;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      outline: none;
+      transition: box-shadow 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      box-shadow: 0 0 8px #00d8ff;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 12px;
+      background-color: #00d8ff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #000;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #009ecb;
+    }
+
+    .error-message {
+      margin-bottom: 15px;
+      color: #ff4c4c;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .profile {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      text-align: right;
+      max-width: 300px;
+    }
+
+    .profile h3 {
+      color: #00ffcc;
+      margin-bottom: 10px;
+    }
+
+    .profile p {
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .profile a {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #ff4c4c;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .profile a:hover {
+      background-color: #ff1a1a;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        padding: 20px;
+      }
+
+      .profile {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Formulaire de connexion (à gauche ou centre) -->
+    <div class="login-container">
+      <h2>Connexion client</h2>
+      <% if(error) { %>
+        <p class="error-message"><%= error %></p>
+      <% } %>
+      <form method="post" action="/login">
+        <label>
+          Utilisateur :
+          <input type="text" name="username" required />
+        </label>
+        <label>
+          Mot de passe :
+          <input type="password" name="password" required />
+        </label>
+        <button type="submit">Se connecter</button>
+      </form>
+    </div>
+
+    <!-- Profil utilisateur (à droite) -->
+    <% if(user) { %>
+    <div class="profile">
+      <h3>Bienvenue, <%= user.username %> !</h3>
+      <p>Vous êtes connecté.</p>
+      <a href="/logout">Se déconnecter</a>
+    </div>
+    <% } %>
+  </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Logs Admin</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+    h2 { color: #333; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #eee; }
+    tr:nth-child(even) { background-color: #fafafa; }
+  </style>
+</head>
+<body>
+  <h2>Logs d'actions (dernières 100)</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Utilisateur</th>
+        <th>Action</th>
+        <th>Détails</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (logs.length === 0) { %>
+        <tr><td colspan="5">Aucun log trouvé.</td></tr>
+      <% } else { %>
+        <% logs.forEach(log => { %>
+          <tr>
+            <td><%= log.id %></td>
+            <td><%= log.user_id || 'N/A' %></td>
+            <td><%= log.action %></td>
+            <td><%= log.details || '-' %></td>
+            <td><%= new Date(log.timestamp).toLocaleString('fr-FR') %></td>
+          </tr>
+        <% }) %>
+      <% } %>
+    </tbody>
+  </table>
+
+  <p><a href="/list_video_client">Retour à la liste des vidéos</a></p>
+  <p><a href="/logout">Déconnexion</a></p>
+</body>
+</html>

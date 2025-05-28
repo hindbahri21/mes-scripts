@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Enregistrement Vidéo Automatique</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      color: #00d8ff;
+    }
+
+    video {
+      border: 5px solid #00d8ff;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 216, 255, 0.5);
+      max-width: 100%;
+      height: auto;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: 1px solid #00d8ff;
+      backdrop-filter: blur(10px);
+      text-align: center;
+      width: 60%;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #00d8ff;
+      color: #000;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00a5cc;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      #status {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎥 Enregistrement Vidéo Automatique</h1>
+  <video id="videoElement" width="640" height="480" autoplay playsinline muted></video>
+
+  <div class="buttons">
+    <button onclick="startRecording()">▶️ Démarrer</button>
+    <button onclick="stopRecording()">⏹️ Arrêter</button>
+  </div>
+
+  <div id="status">État : prêt</div>
+
+  <script>
+    let mediaRecorder;
+    let recordedChunks = [];
+
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then(stream => {
+        const video = document.querySelector('video');
+        video.srcObject = stream;
+        video.play();
+
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'video/webm; codecs=vp9' // ou vp8 si nécessaire
+        });
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'video/webm' });
+          const formData = new FormData();
+          formData.append('video', blob, 'recorded_video.webm');
+
+          fetch('/upload-video', {
+            method: 'POST',
+            body: formData
+          })
+            .then(res => res.text())
+            .then(console.log);
+
+          recordedChunks = [];
+          document.getElementById('status').innerText = 'Enregistrement terminé et envoyé ✅';
+        };
+      });
+
+    function startRecording() {
+      document.getElementById('status').innerText = 'Enregistrement en cours...';
+      recordedChunks = [];
+      mediaRecorder.start(); // Peut aussi être start(5000) pour 5s/partie
+    }
+
+    function stopRecording() {
+      document.getElementById('status').innerText = 'Traitement de la vidéo...';
+      mediaRecorder.stop();
+    }
+  </script>
+</body>
+</html>

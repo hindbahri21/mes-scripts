@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="5" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Liste des vidéos</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    h1 {
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      color: #00d8ff;
+    }
+    table {
+      border-collapse: collapse;
+      width: 90%;
+      max-width: 1000px;
+      background-color: rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 15px rgba(0, 216, 255, 0.5);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    thead {
+      background-color: #00d8ff;
+      color: #000;
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+    tbody tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    tbody tr:hover {
+      background-color: rgba(0, 216, 255, 0.2);
+      cursor: pointer;
+    }
+    a {
+      color: #00d8ff;
+      text-decoration: none;
+      margin-right: 10px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    a:hover {
+      color: #00a1cc;
+      text-decoration: underline;
+    }
+
+    a.profile-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #00d8ff;
+      color: #000;
+      font-weight: 700;
+      border-radius: 6px;
+      text-decoration: none;
+      box-shadow: 0 0 10px #00d8ffbb;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    a.profile-button:hover {
+      background-color: #009ecb;
+      box-shadow: 0 0 15px #009ecbcc;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      table {
+        width: 100%;
+      }
+      th, td {
+        padding: 10px 8px;
+      }
+    }
+
+    /* Styles pour la sidebar */
+    #toggleSidebar {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1001;
+      padding: 10px 15px;
+      background-color: #00d8ff;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #sidebar {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100%;
+      background-color: #111;
+      color: white;
+      padding: 20px;
+      transition: right 0.3s ease;
+      z-index: 1000;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.5);
+    }
+
+    #sidebar a {
+      color: #00d8ff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Bouton d'ouverture de la sidebar -->
+  <button id="toggleSidebar">👤 Profil</button>
+
+  <!-- Sidebar glissante -->
+  <div id="sidebar">
+    <p>Utilisateur : <%= user.username %></p>
+    <a href="/logout">🔒 Déconnexion</a>
+  </div>
+
+  <!-- Titre -->
+  <h1>Liste des vidéos</h1>
+
+  <!-- Tableau des vidéos -->
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom de la vidéo</th>
+        <th>Durée</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% videos.forEach(video => { %>
+        <tr>
+          <td><%= video.id %></td>
+          <td><%= video.filename %></td>
+          <td><%= video.duration %></td>
+          <td><%= video.date %></td>
+          <td>
+            <a href="/video/<%= encodeURIComponent(video.filename) %>" target="_blank" title="Voir la vidéo">▶️ Voir</a>
+            <a href="/download/<%= encodeURIComponent(video.filename) %>" title="Télécharger la vidéo">⬇️ Télécharger</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  
+  <!-- Pagination -->
+  <div style="margin: 20px; text-align: center;">
+    <% if (totalPages > 1) { %>
+      <% for(let i = 1; i <= totalPages; i++) { %>
+        <% if (i === currentPage) { %>
+          <strong style="margin: 0 5px; color: #00d8ff;"><%= i %></strong>
+        <% } else { %>
+          <a href="/list_video_client?page=<%= i %>" style="margin: 0 5px; color: #00a1cc; text-decoration: none;">
+            <%= i %>
+          </a>
+        <% } %>
+      <% } %>
+    <% } %>
+  </div>
+
+  <!-- Script pour la sidebar -->
+  <script>
+    const toggleButton = document.getElementById("toggleSidebar");
+    const sidebar = document.getElementById("sidebar");
+
+    toggleButton.addEventListener("click", () => {
+    if (sidebar.style.right === "0px") {
+      sidebar.style.right = "-300px";
+      toggleButton.textContent = "👤 Profil";
+    } else {
+      sidebar.style.right = "0px";
+      toggleButton.textContent = "✖ Fermer";
+    }
+    });
+  </script>
+
+</body>
+</html>
