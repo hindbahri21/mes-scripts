@@ -1,4 +1,4 @@
-<!--// coté caméra de surveillance-->
+<!--// coté caméra local-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -20,7 +20,7 @@
 
     .container {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       height: 100vh;
       padding: 0 5%;
@@ -96,39 +96,6 @@
       font-size: 1rem;
     }
 
-    .profile {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-      text-align: right;
-      max-width: 300px;
-    }
-
-    .profile h3 {
-      color: #00ffcc;
-      margin-bottom: 10px;
-    }
-
-    .profile p {
-      font-size: 1rem;
-      margin-bottom: 20px;
-    }
-
-    .profile a {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #ff4c4c;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
-    }
-
-    .profile a:hover {
-      background-color: #ff1a1a;
-    }
-
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
@@ -137,42 +104,26 @@
         gap: 30px;
         padding: 20px;
       }
-
-      .profile {
-        text-align: center;
-      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Formulaire de connexion (à gauche ou centre) -->
     <div class="login-container">
       <h2>Connexion client</h2>
-      <% if(error) { %>
+      <% if (error) { %>
         <p class="error-message"><%= error %></p>
       <% } %>
-      <form method="post" action="/login">
-        <label>
-          Utilisateur :
-          <input type="text" name="username" required />
+      <form method="POST" action="/login">
+        <label>Nom d'utilisateur :
+          <input type="text" name="username" required>
         </label>
-        <label>
-          Mot de passe :
-          <input type="password" name="password" required />
+        <label>Mot de passe :
+          <input type="password" name="password" required>
         </label>
         <button type="submit">Se connecter</button>
       </form>
     </div>
-
-    <!-- Profil utilisateur (à droite) -->
-    <% if(user) { %>
-    <div class="profile">
-      <h3>Bienvenue, <%= user.username %> !</h3>
-      <p>Vous êtes connecté.</p>
-      <a href="/logout">Se déconnecter</a>
-    </div>
-    <% } %>
   </div>
 </body>
 </html>

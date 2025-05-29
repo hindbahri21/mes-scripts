@@ -1,3 +1,4 @@
+# coté caméra local
 import os
 import sys
 import io

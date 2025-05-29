@@ -1,3 +1,4 @@
+# coté caméra local
 import cv2
 import json
 import sys
